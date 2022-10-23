@@ -1,0 +1,12 @@
+# Default ignored files
+/shelf/
+../woodcutting_firemaking.iml
+../out
+misc.xml
+modules.xml
+vcs.xml
+uiDesigner.xml
+workspace.xml
+artifacts
+libraries
+../.idea
