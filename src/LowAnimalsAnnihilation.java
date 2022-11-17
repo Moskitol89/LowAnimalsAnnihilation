@@ -105,12 +105,12 @@ public class LowAnimalsAnnihilation extends AbstractScript {
         switch (state) {
             case FIGHT -> {
                 fight();
+                break;
             }
             case BANK -> {
                 deposit();
+                break;
             }
-            //If the character is idle
-
         }
         return Calculations.random(700, 1500);
     }
@@ -122,29 +122,35 @@ public class LowAnimalsAnnihilation extends AbstractScript {
     }
 
     private void fight() {
+        log("fight()");
         if (PLAYER.isStandingStill()) {
             if(Objects.equals(targetName, "Cow")) {
                 if(GroundItems.closest("Cowhide") != null) {
                     GroundItems.closest("Cowhide").interact("Take");
-                   sleep(Calculations.random(1000, 1323));
+                    sleep(Calculations.random(1000, 1323));
+                }
+                if(GroundItems.closest("Bones") != null && !Inventory.isFull()) {
+                    GroundItems.closest("Bones").interact("Take");
+                    sleep(Calculations.random(900, 1323));
+                    while (Inventory.contains("Bones")) {
+                        Inventory.get("Bones").interact("Bury");
+                        sleep(Calculations.random(1121, 1499));
+                    }
                 }
             }
             target = NPCs.closest(targetName);
             if (target == null || !target.canReach()) {
                 Walking.walk(targetArea.getRandomTile());
             }
-            if (!target.isInCombat()) {
+            if (target != null && !target.isInCombat()) {
                 target.interact("Attack");
             }
         }
     }
     private void deposit() {
-        if(PLAYER.isStandingStill()) {
-            Bank.open();
-            Bank.depositAll("Cowhide");
-            if(Inventory.count("Salmon") != 1) {
-                Bank.withdraw("Salmon",1);
-            }
-        }
+        log("deposit");
+        Bank.open(Bank.getClosestBankLocation());
+        Bank.depositAll("Cowhide");
+
     }
 }
